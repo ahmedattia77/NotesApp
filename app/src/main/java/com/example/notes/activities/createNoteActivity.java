@@ -1,15 +1,35 @@
 package com.example.notes.activities;
 
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
+
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,14 +43,22 @@ import com.example.notes.databinding.ActivityMainBinding;
 import com.example.notes.entities.Note;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class createNoteActivity extends AppCompatActivity {
 
+    private static final int IMAGE_REQUEST_PERMISSION_CODE = 1;
+    private static final int SELECT_IMAGE_REQUEST_CODE = 2;
+    private String selectedImagePath;
     private ActivityCreateNoteBinding binding;
     private String chosenColor = "#333333";
+    private AlertDialog webUriAlertDialog;
+    Note sentNote;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,15 +74,49 @@ public class createNoteActivity extends AppCompatActivity {
 
         binding.createDone.setOnClickListener((v) -> { addNote(); });
 
+        selectedImagePath = "";
         createMiscellaneous();
-//        setSubtitleViewColor();
+        setSubtitleViewColor();
 
+        if (getIntent().getBooleanExtra("EDIT/VIEW_REQUEST" , false)){
+            binding.createLayoutAddUri.setVisibility(View.VISIBLE);
+            EditText editText = findViewById(R.id.miscellaneous_inputLink_et);
+
+            editText.setHint("Modify Website Link");
+
+            sentNote = (Note) getIntent().getSerializableExtra("note");
+            editViewNote();
+        }
+
+    }
+
+    private void editViewNote() {
+        binding.createTitle.setText(sentNote.getTitle());
+        binding.createSubtitle.setText(sentNote.getSubtitle());
+        binding.createDescription.setText(sentNote.getDescription());
+        binding.createDateTime.setText(sentNote.getDateTime());
+
+        if(sentNote.getImagePath() != null && !sentNote.getImagePath().trim().isEmpty()){
+            binding.createPhoto.setImageBitmap(BitmapFactory.decodeFile(sentNote.getImagePath()));
+            binding.createPhoto.setVisibility(View.VISIBLE);
+            selectedImagePath = sentNote.getImagePath();
+        }
+
+        if(sentNote.getWebLink() != null && !sentNote.getWebLink().trim().isEmpty()){
+            binding.createUri.setText(sentNote.getWebLink());
+            binding.createUri.setVisibility(View.VISIBLE);
+        }
 
     }
 
     private void addNote (){
 
-        Note note  = new Note();
+        Note note = new Note();
+
+        if(!checkFields()){
+            Toast.makeText(this, "you can't leave all fields empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (!binding.createTitle.getText().toString().trim().isEmpty())
             note.setTitle(binding.createTitle.getText().toString());
@@ -70,11 +132,16 @@ public class createNoteActivity extends AppCompatActivity {
 
         note.setColor(chosenColor);
 
-        if(!checkFields()){
-            Toast.makeText(this, "you can't leave all fields empty", Toast.LENGTH_SHORT).show();
-            return;
+        if (!selectedImagePath.isEmpty())
+            note.setImagePath(selectedImagePath);
+
+        if(!binding.createUri.getText().toString().trim().isEmpty()){
+            note.setWebLink(binding.createUri.getText().toString());
         }
 
+        if (sentNote != null){
+            note.setId(sentNote.getId());
+        }
 
 
         class saveNotesAsyncTask extends AsyncTask<Void,Void,Void> {
@@ -125,7 +192,7 @@ public class createNoteActivity extends AppCompatActivity {
                 if (bottomSheetBehavior.getState() != bottomSheetBehavior.STATE_EXPANDED){
                     bottomSheetBehavior.setState(bottomSheetBehavior.STATE_EXPANDED);
                 }else{
-                    bottomSheetBehavior.setState(bottomSheetBehavior.STATE_COLLAPSED);
+                    bottomSheetBehavior.setState(STATE_COLLAPSED);
                 }
             }
         });
@@ -202,10 +269,187 @@ public class createNoteActivity extends AppCompatActivity {
             }
         });
 
+        if (sentNote != null && sentNote.getColor() != null &&!sentNote.getColor().trim().isEmpty()){
+            switch (sentNote.getColor()){
+                case "673AB7":
+                    miscellaneous.findViewById(R.id.viewColor2).performClick();
+                    break;
+
+                case "#FF4842":
+                    miscellaneous.findViewById(R.id.viewColor3).performClick();
+                    break;
+
+                case "#3A52Fc":
+                    miscellaneous.findViewById(R.id.viewColor4).performClick();
+                    break;
+
+                case "#000000":
+                    miscellaneous.findViewById(R.id.viewColor5).performClick();
+                    break;
+            }
+        }
+
+        miscellaneous.findViewById(R.id.create_addPhotoLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(STATE_COLLAPSED);
+                if(ContextCompat.checkSelfPermission(
+                        getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )!= PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(
+                            createNoteActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            IMAGE_REQUEST_PERMISSION_CODE
+                    );
+                }else
+                    selectImage();
+
+            }
+        });
+
+
+        ImageView webImage = findViewById(R.id.miscellaneous_link_iv);
+        webImage.setImageResource(R.drawable.ic_done);
+
+        miscellaneous.findViewById(R.id.create_addUriLayout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                EditText input = findViewById(R.id.miscellaneous_inputLink_et);
+
+                input.requestFocus();
+                webImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        webImage.setImageResource(R.drawable.ic_website);
+                        bottomSheetBehavior.setState(STATE_COLLAPSED);
+
+                        if (input.getText().toString().trim().isEmpty()) {
+                            Toast.makeText(createNoteActivity.this, "Add uri", Toast.LENGTH_SHORT).show();
+                        } else if (!Patterns.WEB_URL.matcher(input.getText().toString()).matches()) {
+                            Toast.makeText(createNoteActivity.this, "un valid uri", Toast.LENGTH_SHORT).show();
+                        } else {
+                            binding.createUri.setText(input.getText().toString());
+                            binding.createLayoutAddUri.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+            }
+
+
+        });
+
+    }
+
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK , MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent ,SELECT_IMAGE_REQUEST_CODE);
     }
 
     private void setSubtitleViewColor(){
         GradientDrawable gradientDrawable = (GradientDrawable) binding.createView.getBackground();
         gradientDrawable.setColor(Color.parseColor(chosenColor));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == IMAGE_REQUEST_PERMISSION_CODE && grantResults.length > 0){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                selectImage();
+            }else {
+                Toast.makeText(this, "Permissions Denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == SELECT_IMAGE_REQUEST_CODE && resultCode == RESULT_OK){
+            if(data != null){
+                Uri imageUri = data.getData();
+                if (imageUri != null){
+                    try {
+                        InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                        Bitmap imageBitmap = BitmapFactory.decodeStream(inputStream);
+                        binding.createPhoto.setImageBitmap(imageBitmap);
+                        binding.createPhoto.setVisibility(View.VISIBLE);
+                        selectedImagePath = getImagePath(imageUri);
+
+                    } catch (FileNotFoundException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+    }
+
+    private String getImagePath (Uri uri){
+        String path;
+        Cursor cursor = getContentResolver().
+                query(uri , null ,null ,null ,null);
+        if (cursor == null){
+            path = uri.getPath();
+        }else{
+            cursor.moveToFirst();
+            int index = cursor.getColumnIndex("_data");
+            path = cursor.getString(index);
+            cursor.close();
+        }
+
+        return path;
+    }
+
+
+    private void createWebUriAlertDialog(){
+
+        if (webUriAlertDialog == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(createNoteActivity.this);
+            View view = LayoutInflater.from(this).inflate(
+                    R.layout.layout_add_uri
+                    ,(ViewGroup) findViewById(R.id.addUri_layoutContainer)
+            );
+
+            builder.setView(view);
+
+            webUriAlertDialog = builder.create();
+
+            if (webUriAlertDialog.getWindow() != null){
+                webUriAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+            binding.createUri.requestFocus();
+
+            TextView add ,cancel;
+            EditText dialogUri;
+
+            add = findViewById(R.id.addUri_add_tv);
+            cancel =  findViewById(R.id.addUri_cancel_tv);
+            dialogUri = findViewById(R.id.addUri_input_et);
+
+             add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(dialogUri.getText().toString().trim().isEmpty()){
+                        Toast.makeText(createNoteActivity.this, "Add uri", Toast.LENGTH_SHORT).show();
+                    }else if (!Patterns.WEB_URL.matcher(dialogUri.getText().toString()).matches()){
+                        Toast.makeText(createNoteActivity.this, "un valid uri", Toast.LENGTH_SHORT).show();
+                    }else {
+                        binding.createUri.setText(dialogUri.getText().toString());
+                        binding.createLayoutAddUri.setVisibility(View.VISIBLE);
+                        webUriAlertDialog.dismiss();
+                    }
+                }
+            });
+
+             cancel.setOnClickListener(new View.OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                     webUriAlertDialog.dismiss();
+                 }
+             });
+        }
+        webUriAlertDialog.show();
     }
 }

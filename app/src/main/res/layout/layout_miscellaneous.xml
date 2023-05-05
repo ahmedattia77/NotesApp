@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/miscellaneous"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -153,4 +154,71 @@
             />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/create_addPhotoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_margin="@dimen/_15sdp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:src="@drawable/ic_image"
+            app:tint="@color/colorWhite" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:textSize="@dimen/_12ssp"
+            android:text="@string/add_image"
+            android:textColor="@color/colorIcons"
+            android:fontFamily="@font/ubuntu_medium"
+            android:includeFontPadding="false"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/create_addUriLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_12sdp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/miscellaneous_link_iv"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:src="@drawable/ic_website"
+            app:tint="@color/colorWhite" />
+
+        <EditText
+            android:id="@+id/miscellaneous_inputLink_et"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:textSize="@dimen/_12ssp"
+            android:hint="Add Link"
+            android:background="@null"
+            android:inputType="textUri"
+            android:textColorHint="@color/colorTextHint"
+            android:textColor="@color/colorIcons"
+            android:fontFamily="@font/ubuntu_medium"
+            android:includeFontPadding="false"
+            android:visibility="visible"
+            />
+
+    </LinearLayout>
+
+
+
 </LinearLayout>

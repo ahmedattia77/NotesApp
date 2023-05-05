@@ -10,6 +10,8 @@
     android:elevation="@dimen/_16sdp"
     >
 
+
+
     <LinearLayout
         android:id="@+id/container_layout"
         android:layout_width="match_parent"
@@ -17,6 +19,16 @@
         android:orientation="vertical"
         android:background="@color/colorDefaultNotesColor"
         >
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/container_photo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            app:riv_corner_radius_top_left="@dimen/_10sdp"
+            app:riv_corner_radius_top_right="@dimen/_10sdp"
+            android:visibility="gone"
+            />
 
     <TextView
         android:id="@+id/container_title"

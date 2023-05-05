@@ -3,4 +3,9 @@
     <string name="my_notes">My Notes</string>
     <string name="title">Title</string>
     <string name="subtitle">Subtitle</string>
+    <string name="add_link">Add Link</string>
+    <string name="add_image">Add Image</string>
+    <string name="type">type ...</string>
+    <string name="cancelDialog">CANCEL </string>
+    <string name="addDialog">ADD </string>
 </resources>

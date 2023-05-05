@@ -114,6 +114,45 @@
                 android:background="@drawable/background_subtitle"
                 />
 
+
+            <ImageView
+                android:id="@+id/create_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/create_view"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_15ssp"
+                android:adjustViewBounds="true"
+                android:visibility="gone"
+                />
+
+            <LinearLayout
+                android:id="@+id/create_layoutAddUri"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="clip_vertical"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                app:layout_constraintTop_toBottomOf="@id/create_photo"
+                android:visibility="gone"
+                >
+            <TextView
+                android:id="@+id/create_uri"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:autoLink="web"
+                android:fontFamily="@font/ubuntu_regular"
+                android:includeFontPadding="false"
+                android:textSize="@dimen/_12ssp"
+                />
+
+            </LinearLayout>
+
+
             <EditText
                 android:id="@+id/create_description"
                 android:layout_width="match_parent"
@@ -133,7 +172,7 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorTextHint"
-                app:layout_constraintTop_toBottomOf="@+id/create_view"
+                app:layout_constraintTop_toBottomOf="@+id/create_layoutAddUri"
                 />
 
 
