@@ -8,4 +8,6 @@
     <string name="type">type ...</string>
     <string name="cancelDialog">CANCEL </string>
     <string name="addDialog">ADD </string>
+    <string name="delete">Delete</string>
+    <string name="are_you_sure">Are you sure !</string>
 </resources>

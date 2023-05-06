@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -56,7 +57,8 @@ public class createNoteActivity extends AppCompatActivity {
     private String selectedImagePath;
     private ActivityCreateNoteBinding binding;
     private String chosenColor = "#333333";
-    private AlertDialog webUriAlertDialog;
+    private AlertDialog dialogAddWebsite;
+    private AlertDialog dialogDelete;
     Note sentNote;
 
     @Override
@@ -80,10 +82,6 @@ public class createNoteActivity extends AppCompatActivity {
 
         if (getIntent().getBooleanExtra("EDIT/VIEW_REQUEST" , false)){
             binding.createLayoutAddUri.setVisibility(View.VISIBLE);
-            EditText editText = findViewById(R.id.miscellaneous_inputLink_et);
-
-            editText.setHint("Modify Website Link");
-
             sentNote = (Note) getIntent().getSerializableExtra("note");
             editViewNote();
         }
@@ -307,40 +305,120 @@ public class createNoteActivity extends AppCompatActivity {
             }
         });
 
-
-        ImageView webImage = findViewById(R.id.miscellaneous_link_iv);
-        webImage.setImageResource(R.drawable.ic_done);
-
         miscellaneous.findViewById(R.id.create_addUriLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                EditText input = findViewById(R.id.miscellaneous_inputLink_et);
-
+                TextView input = findViewById(R.id.miscellaneous_inputLink_et);
                 input.requestFocus();
-                webImage.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        webImage.setImageResource(R.drawable.ic_website);
-                        bottomSheetBehavior.setState(STATE_COLLAPSED);
-
-                        if (input.getText().toString().trim().isEmpty()) {
-                            Toast.makeText(createNoteActivity.this, "Add uri", Toast.LENGTH_SHORT).show();
-                        } else if (!Patterns.WEB_URL.matcher(input.getText().toString()).matches()) {
-                            Toast.makeText(createNoteActivity.this, "un valid uri", Toast.LENGTH_SHORT).show();
-                        } else {
-                            binding.createUri.setText(input.getText().toString());
-                            binding.createLayoutAddUri.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
+                bottomSheetBehavior.setState(STATE_COLLAPSED);
+                addWebsiteNoteAlertDialog();
             }
-
 
         });
 
+//        if (sentNote != null) {
+//            miscellaneous.findViewById(R.id.miscellaneous_deleteLayout).setVisibility(View.VISIBLE);
+            miscellaneous.findViewById(R.id.miscellaneous_deleteLayout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetBehavior.setState(STATE_COLLAPSED);
+                    showDeleteNoteAlertDialog();
+                }
+            });
+//        }
     }
+
+    private void showDeleteNoteAlertDialog (){
+        if (dialogDelete == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(createNoteActivity.this);
+            View view = LayoutInflater.from(this).inflate(
+                    R.layout.layout_delete_note,
+                    (ViewGroup) findViewById(R.id.layout_deleteNoteContainer)
+            );
+
+            builder.setView(view);
+            dialogDelete = builder.create();
+
+            if (dialogDelete.getWindow() != null){
+                dialogDelete.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+            view.findViewById(R.id.deleteNote_done_tv).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    @SuppressLint("StaticFieldLeak")
+                    class DeleteNoteTask extends AsyncTask<Void,Void,Void>{
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            NoteDatabase.getInstance(getApplicationContext())
+                                    .noteDao().deleteNote(sentNote);
+                            return null;
+                        }
+                        @Override
+                        protected void onPostExecute(Void unused) {
+                            super.onPostExecute(unused);
+                            Intent intent = new Intent();
+                            intent.putExtra("isDeletedNote" , true);
+                            setResult(RESULT_OK , intent);
+                            finish();
+                        }
+                    }
+                    new DeleteNoteTask().execute();
+                }
+            });
+
+            view.findViewById(R.id.deleteNote_cancel_tv).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogDelete.dismiss();
+                }
+            });
+        }
+        dialogDelete.show();
+    }
+    private void addWebsiteNoteAlertDialog(){
+
+        if (dialogAddWebsite == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(createNoteActivity.this);
+            View view = LayoutInflater.from(this).inflate(
+                    R.layout.layout_add_uri
+                    ,(ViewGroup) findViewById(R.id.addUri_layoutContainer)
+            );
+
+            builder.setView(view);
+            dialogAddWebsite = builder.create();
+
+            if (dialogAddWebsite.getWindow() != null){
+                dialogAddWebsite.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+
+
+            EditText input = view.findViewById(R.id.addUri_input_et);
+            input.requestFocus();
+            view.findViewById(R.id.addUri_add_tv).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(input.getText().toString().trim().isEmpty()){
+                        Toast.makeText(createNoteActivity.this, "Add uri", Toast.LENGTH_SHORT).show();
+                    }else if (!Patterns.WEB_URL.matcher(input.getText().toString()).matches()){
+                        Toast.makeText(createNoteActivity.this, "un valid uri", Toast.LENGTH_SHORT).show();
+                    }else {
+                        binding.createLayoutAddUri.setVisibility(View.VISIBLE);
+                        binding.createUri.setText(input.getText().toString());
+                        dialogAddWebsite.dismiss();
+                    }
+                }
+            });
+
+            view.findViewById(R.id.addUri_cancel_tv).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogAddWebsite.dismiss();
+                }
+            });
+        }
+        dialogAddWebsite.show();
+    }
+
 
     private void selectImage() {
         Intent intent = new Intent(Intent.ACTION_PICK , MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -402,54 +480,4 @@ public class createNoteActivity extends AppCompatActivity {
         return path;
     }
 
-
-    private void createWebUriAlertDialog(){
-
-        if (webUriAlertDialog == null){
-            AlertDialog.Builder builder = new AlertDialog.Builder(createNoteActivity.this);
-            View view = LayoutInflater.from(this).inflate(
-                    R.layout.layout_add_uri
-                    ,(ViewGroup) findViewById(R.id.addUri_layoutContainer)
-            );
-
-            builder.setView(view);
-
-            webUriAlertDialog = builder.create();
-
-            if (webUriAlertDialog.getWindow() != null){
-                webUriAlertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-            }
-            binding.createUri.requestFocus();
-
-            TextView add ,cancel;
-            EditText dialogUri;
-
-            add = findViewById(R.id.addUri_add_tv);
-            cancel =  findViewById(R.id.addUri_cancel_tv);
-            dialogUri = findViewById(R.id.addUri_input_et);
-
-             add.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(dialogUri.getText().toString().trim().isEmpty()){
-                        Toast.makeText(createNoteActivity.this, "Add uri", Toast.LENGTH_SHORT).show();
-                    }else if (!Patterns.WEB_URL.matcher(dialogUri.getText().toString()).matches()){
-                        Toast.makeText(createNoteActivity.this, "un valid uri", Toast.LENGTH_SHORT).show();
-                    }else {
-                        binding.createUri.setText(dialogUri.getText().toString());
-                        binding.createLayoutAddUri.setVisibility(View.VISIBLE);
-                        webUriAlertDialog.dismiss();
-                    }
-                }
-            });
-
-             cancel.setOnClickListener(new View.OnClickListener() {
-                 @Override
-                 public void onClick(View v) {
-                     webUriAlertDialog.dismiss();
-                 }
-             });
-        }
-        webUriAlertDialog.show();
-    }
 }

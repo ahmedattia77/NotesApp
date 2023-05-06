@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener {
         noteAdapter = new NoteAdapter(noteList , this);
         binding.mainRecycleView.setAdapter(noteAdapter);
 
-        displayNotes(SHOW_REQUEST);
+        displayNotes(SHOW_REQUEST , false);
 
     }
 
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener {
 
     }
 
-    private void displayNotes (final int requestCode){
+    private void displayNotes (final int requestCode , final boolean isNoteDeleted){
 
         @SuppressLint("staticFieldLeak")
         class getAllNotesAsyncTask extends AsyncTask<Void,Void, List<Note>>  {
@@ -92,8 +92,13 @@ public class MainActivity extends AppCompatActivity implements NoteListener {
                     noteAdapter.notifyItemInserted(0);
                 }else if (requestCode == UPDATE_REQUEST){
                     noteList.remove(noteClickPosition);
-                    noteList.add(noteClickPosition , notes.get(noteClickPosition));
-                    noteAdapter.notifyItemChanged(noteClickPosition);
+
+                    if (isNoteDeleted){
+                        noteAdapter.notifyItemRemoved(noteClickPosition);
+                    }else{
+                        noteList.add(noteClickPosition , notes.get(noteClickPosition));
+                        noteAdapter.notifyItemChanged(noteClickPosition);
+                    }
                 }
             }
         }
@@ -104,10 +109,10 @@ public class MainActivity extends AppCompatActivity implements NoteListener {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD_REQUEST && resultCode == resultCode){
-            displayNotes(ADD_REQUEST);
+            displayNotes(ADD_REQUEST , false);
         }else if (requestCode == UPDATE_REQUEST && resultCode == RESULT_OK){
             if (data != null)
-                displayNotes(UPDATE_REQUEST);
+                displayNotes(UPDATE_REQUEST , data.getBooleanExtra("isDeletedNote" , false));
         }
     }
 }
