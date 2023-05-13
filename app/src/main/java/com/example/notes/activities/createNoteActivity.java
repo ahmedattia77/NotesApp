@@ -56,7 +56,7 @@ public class createNoteActivity extends AppCompatActivity {
     private static final int SELECT_IMAGE_REQUEST_CODE = 2;
     private String selectedImagePath;
     private ActivityCreateNoteBinding binding;
-    private String chosenColor = "#333333";
+    private String chosenColor = "";
     private AlertDialog dialogAddWebsite;
     private AlertDialog dialogDelete;
     Note sentNote;
@@ -77,6 +77,8 @@ public class createNoteActivity extends AppCompatActivity {
         binding.createDone.setOnClickListener((v) -> { addNote(); });
 
         selectedImagePath = "";
+
+        pickColor();
         createMiscellaneous();
         setSubtitleViewColor();
 
@@ -86,6 +88,90 @@ public class createNoteActivity extends AppCompatActivity {
             editViewNote();
         }
 
+        if (getIntent().getBooleanExtra("addImage" , false)){
+            selectImage();
+        }
+        if (getIntent().getBooleanExtra("addUri" , false)){
+            addWebsiteNoteAlertDialog();
+        }
+
+        if (sentNote == null)
+            deleteLayout();
+
+    }
+
+    private void deleteLayout (){
+        LinearLayout layout = findViewById(R.id.miscellaneous_deleteLayout);
+        layout.setVisibility(View.GONE);
+    }
+
+    private void pickColor (){
+
+        binding.viewColor1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenColor = "#333333";
+                binding.createColor1.setImageResource(R.drawable.ic_done);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                setSubtitleViewColor();
+            }
+        });
+
+        binding.viewColor2.findViewById(R.id.viewColor2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenColor = "#673AB7";
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(R.drawable.ic_done);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                setSubtitleViewColor();
+            }
+        });
+
+        binding.viewColor3.findViewById(R.id.viewColor3).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenColor = "#FF4842";
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(R.drawable.ic_done);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                setSubtitleViewColor();
+            }
+        });
+
+        binding.viewColor4.findViewById(R.id.viewColor4).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenColor = "#3A52Fc";
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(R.drawable.ic_done);
+                binding.createColor1.setImageResource(0);
+                setSubtitleViewColor();
+
+            }
+        });
+
+        binding.viewColor5.findViewById(R.id.viewColor5).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenColor = "#000000";
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(0);
+                binding.createColor1.setImageResource(R.drawable.ic_done);
+                setSubtitleViewColor();
+            }
+        });
     }
 
     private void editViewNote() {
@@ -128,7 +214,8 @@ public class createNoteActivity extends AppCompatActivity {
         if (!binding.createDateTime.getText().toString().trim().isEmpty())
             note.setDateTime(binding.createDateTime.getText().toString());
 
-        note.setColor(chosenColor);
+        if (!chosenColor.isEmpty())
+            note.setColor(chosenColor);
 
         if (!selectedImagePath.isEmpty())
             note.setImagePath(selectedImagePath);
@@ -426,6 +513,8 @@ public class createNoteActivity extends AppCompatActivity {
     }
 
     private void setSubtitleViewColor(){
+        if (chosenColor.isEmpty())
+            return;
         GradientDrawable gradientDrawable = (GradientDrawable) binding.createView.getBackground();
         gradientDrawable.setColor(Color.parseColor(chosenColor));
     }

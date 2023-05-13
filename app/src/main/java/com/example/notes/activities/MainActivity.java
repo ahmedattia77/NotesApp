@@ -30,6 +30,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NoteListener {
 
     public static int ADD_REQUEST = 1;
+    public static int ADD_IMAGE_REQUEST = 5;
     public static int UPDATE_REQUEST = 2;
     public static int SHOW_REQUEST = 3;
     private ActivityMainBinding binding;
@@ -55,8 +56,31 @@ public class MainActivity extends AppCompatActivity implements NoteListener {
         noteList = new ArrayList<>();
         noteAdapter = new NoteAdapter(noteList , this);
         binding.mainRecycleView.setAdapter(noteAdapter);
-
         displayNotes(SHOW_REQUEST , false);
+
+        binding.mainAddNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(getApplicationContext() , createNoteActivity.class),ADD_REQUEST);
+            }
+        });
+
+        binding.mainAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext() , createNoteActivity.class);
+                intent.putExtra("addImage" , true);
+                startActivityForResult(intent , UPDATE_REQUEST);
+            }
+        });
+        binding.mainAddWebsite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext() , createNoteActivity.class);
+                intent.putExtra("addUri" , true);
+                startActivityForResult(intent , UPDATE_REQUEST);
+            }
+        });
 
     }
 

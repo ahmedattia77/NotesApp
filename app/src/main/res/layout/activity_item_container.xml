@@ -10,8 +10,6 @@
     android:elevation="@dimen/_16sdp"
     >
 
-
-
     <LinearLayout
         android:id="@+id/container_layout"
         android:layout_width="match_parent"
@@ -41,6 +39,7 @@
         android:includeFontPadding="false"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/_13ssp"
+        android:visibility="gone"
         />
 
     <TextView
@@ -50,33 +49,19 @@
         android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginEnd="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_4sdp"
         android:fontFamily="@font/ubuntu_regular"
         android:includeFontPadding="false"
         android:textColor="@color/colorNoteSubtitleText"
         android:textSize="@dimen/_12ssp"
+        android:visibility="gone"
         />
-
-<!--        <TextView-->
-<!--            android:id="@+id/container_description"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="@dimen/_8sdp"-->
-<!--            android:layout_marginTop="@dimen/_4sdp"-->
-<!--            android:layout_marginEnd="@dimen/_8sdp"-->
-<!--            android:layout_marginBottom="@dimen/_4sdp"-->
-<!--            android:fontFamily="@font/ubuntu_regular"-->
-<!--            android:includeFontPadding="false"-->
-<!--            android:textColor="@color/colorNoteSubtitleText"-->
-<!--            android:textSize="@dimen/_10ssp"-->
-<!--            android:maxLines="3"-->
-<!--            />-->
 
 
         <TextView
         android:id="@+id/container_dateTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_8sdp"
@@ -85,6 +70,47 @@
         android:textColor="@color/colorNoteSubtitleText"
         android:textSize="@dimen/_7ssp"
         />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/container_image"
+                android:layout_width="@dimen/_14sdp"
+                android:layout_height="@dimen/_14sdp"
+                android:src="@drawable/ic_image"
+                app:tint="@color/colorWhite"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_6sdp"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/container_uri"
+                android:layout_width="@dimen/_14sdp"
+                android:layout_height="@dimen/_14sdp"
+                android:src="@drawable/ic_website"
+                app:tint="@color/colorWhite"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_6sdp"
+                android:visibility="gone"
+                />
+
+            <ImageView
+                android:id="@+id/container_voice"
+                android:layout_width="@dimen/_14sdp"
+                android:layout_height="@dimen/_14sdp"
+                android:src="@drawable/ic_voice"
+                app:tint="@color/colorWhite"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_6sdp"
+                android:visibility="gone"
+                />
+
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

@@ -2,10 +2,12 @@ package com.example.notes.adapters;
 
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -68,6 +70,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder>{
         TextView title , subtitle , dateTime ,description;
         LinearLayout layout;
         RoundedImageView imageView;
+        ImageView image , uri , voice;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
@@ -77,21 +80,38 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder>{
             layout = itemView.findViewById(R.id.container_layout);
             imageView = itemView.findViewById(R.id.container_photo);
 
+            image = itemView.findViewById(R.id.container_image);
+            uri = itemView.findViewById(R.id.container_uri);
+            voice = itemView.findViewById(R.id.container_voice);
+
         }
 
         void setNote (Note note){
 
-            title.setText(note.getTitle());
-            subtitle.setText(note.getSubtitle());
+            if (note.getColor() != null){
+                layout.setBackgroundColor(Color.parseColor(note.getColor()));
+            }
+
+            if (note.getTitle() != null){
+                title.setVisibility(View.VISIBLE);
+                title.setText(note.getTitle());
+            }
+
+            if (note.getSubtitle() != null){
+                subtitle.setVisibility(View.VISIBLE);
+                subtitle.setText(note.getTitle());
+            }
+
+            if (note.getSubtitle() != null){
+                subtitle.setVisibility(View.VISIBLE);
+                subtitle.setText(note.getTitle());
+            }
             dateTime.setText(note.getDateTime());
 
-            // i have an bug/exception here
-//            if (note.getImagePath() != null){
-//                imageView.setImageBitmap(BitmapFactory.decodeFile(note.getImagePath()));
-//                imageView.setVisibility(View.VISIBLE);
-//            }else {
-//                imageView.setVisibility(View.GONE);
-//            }
+            if (note.getImagePath() != null)
+                image.setVisibility(View.VISIBLE);
+            if (note.getWebLink() != null)
+                uri.setVisibility(View.VISIBLE);
 
         }
     }
