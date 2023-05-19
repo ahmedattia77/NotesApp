@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/about"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="@dimen/_10sdp"
+    android:background="@drawable/background_dialog">
+
+    <TextView
+        android:id="@+id/about_developedBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/ubuntu_bold"
+        android:text="Developed by"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/about_ahmed_attia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ahmed Attia : softeware developer"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/_13ssp"
+        android:fontFamily="@font/ubuntu_medium"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_developedBy"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/about_ahmed_attia">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:fontFamily="@font/ubuntu_bold"
+            android:text="My social account links"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/_14ssp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:autoLink="web"
+            android:fontFamily="@font/ubuntu_regular"
+            android:inputType="textUri"
+            android:text="linkedin.com/in/ahmed-attia-7b495121a/"
+            android:textColor="@color/colorNoteColor4"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:autoLink="web"
+            android:fontFamily="@font/ubuntu_regular"
+            android:inputType="textUri"
+            android:text="github.com/ahmedattia77"
+            android:textColor="@color/colorNoteColor4"
+            android:textSize="@dimen/_12ssp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:fontFamily="@font/ubuntu_bold"
+            android:text="Contact me"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/_14ssp"
+
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginBottom="@dimen/_14sdp"
+            android:autoLink="email"
+            android:fontFamily="@font/ubuntu_regular"
+            android:inputType="textEmailAddress"
+            android:text="max.kali.1212@gmail.com"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/_12ssp"
+            />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

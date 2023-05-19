@@ -112,63 +112,63 @@ public class createNoteActivity extends AppCompatActivity {
             public void onClick(View v) {
                 chosenColor = "#333333";
                 binding.createColor1.setImageResource(R.drawable.ic_done);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
+                binding.createColor2.setImageResource(0);
+                binding.createColor3.setImageResource(0);
+                binding.createColor4.setImageResource(0);
+                binding.createColor5.setImageResource(0);
                 setSubtitleViewColor();
             }
         });
 
-        binding.viewColor2.findViewById(R.id.viewColor2).setOnClickListener(new View.OnClickListener() {
+        binding.viewColor2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chosenColor = "#673AB7";
                 binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(R.drawable.ic_done);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
+                binding.createColor2.setImageResource(R.drawable.ic_done);
+                binding.createColor3.setImageResource(0);
+                binding.createColor4.setImageResource(0);
+                binding.createColor5.setImageResource(0);
                 setSubtitleViewColor();
             }
         });
 
-        binding.viewColor3.findViewById(R.id.viewColor3).setOnClickListener(new View.OnClickListener() {
+        binding.viewColor3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chosenColor = "#FF4842";
                 binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(R.drawable.ic_done);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
+                binding.createColor2.setImageResource(0);
+                binding.createColor3.setImageResource(R.drawable.ic_done);
+                binding.createColor4.setImageResource(0);
+                binding.createColor5.setImageResource(0);
                 setSubtitleViewColor();
             }
         });
 
-        binding.viewColor4.findViewById(R.id.viewColor4).setOnClickListener(new View.OnClickListener() {
+        binding.viewColor4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chosenColor = "#3A52Fc";
                 binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(R.drawable.ic_done);
-                binding.createColor1.setImageResource(0);
+                binding.createColor2.setImageResource(0);
+                binding.createColor3.setImageResource(0);
+                binding.createColor4.setImageResource(R.drawable.ic_done);
+                binding.createColor5.setImageResource(0);
                 setSubtitleViewColor();
 
             }
         });
 
-        binding.viewColor5.findViewById(R.id.viewColor5).setOnClickListener(new View.OnClickListener() {
+        binding.viewColor5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chosenColor = "#000000";
                 binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(0);
-                binding.createColor1.setImageResource(R.drawable.ic_done);
+                binding.createColor2.setImageResource(0);
+                binding.createColor3.setImageResource(0);
+                binding.createColor4.setImageResource(0);
+                binding.createColor5.setImageResource(R.drawable.ic_done);
                 setSubtitleViewColor();
             }
         });
@@ -282,77 +282,7 @@ public class createNoteActivity extends AppCompatActivity {
             }
         });
 
-        final ImageView imageViewColor1 = miscellaneous.findViewById(R.id.miscellaneous_color1);
-        final ImageView imageViewColor2 = miscellaneous.findViewById(R.id.miscellaneous_color2);
-        final ImageView imageViewColor3 = miscellaneous.findViewById(R.id.miscellaneous_color3);
-        final ImageView imageViewColor4 = miscellaneous.findViewById(R.id.miscellaneous_color4);
-        final ImageView imageViewColor5 = miscellaneous.findViewById(R.id.miscellaneous_color5);
 
-        miscellaneous.findViewById(R.id.viewColor1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chosenColor = "#333333";
-                imageViewColor1.setImageResource(R.drawable.ic_done);
-                imageViewColor2.setImageResource(0);
-                imageViewColor3.setImageResource(0);
-                imageViewColor4.setImageResource(0);
-                imageViewColor5.setImageResource(0);
-                setSubtitleViewColor();
-            }
-        });
-
-        miscellaneous.findViewById(R.id.viewColor2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chosenColor = "#673AB7";
-                imageViewColor1.setImageResource(0);
-                imageViewColor2.setImageResource(R.drawable.ic_done);
-                imageViewColor3.setImageResource(0);
-                imageViewColor4.setImageResource(0);
-                imageViewColor5.setImageResource(0);
-                setSubtitleViewColor();
-            }
-        });
-
-        miscellaneous.findViewById(R.id.viewColor3).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chosenColor = "#FF4842";
-                imageViewColor1.setImageResource(0);
-                imageViewColor2.setImageResource(0);
-                imageViewColor3.setImageResource(R.drawable.ic_done);
-                imageViewColor4.setImageResource(0);
-                imageViewColor5.setImageResource(0);
-                setSubtitleViewColor();
-            }
-        });
-
-        miscellaneous.findViewById(R.id.viewColor4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chosenColor = "#3A52Fc";
-                imageViewColor1.setImageResource(0);
-                imageViewColor2.setImageResource(0);
-                imageViewColor3.setImageResource(0);
-                imageViewColor4.setImageResource(R.drawable.ic_done);
-                imageViewColor5.setImageResource(0);
-                setSubtitleViewColor();
-
-            }
-        });
-
-        miscellaneous.findViewById(R.id.viewColor5).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chosenColor = "#000000";
-                imageViewColor1.setImageResource(0);
-                imageViewColor2.setImageResource(0);
-                imageViewColor3.setImageResource(0);
-                imageViewColor4.setImageResource(0);
-                imageViewColor5.setImageResource(R.drawable.ic_done);
-                setSubtitleViewColor();
-            }
-        });
 
         if (sentNote != null && sentNote.getColor() != null &&!sentNote.getColor().trim().isEmpty()){
             switch (sentNote.getColor()){

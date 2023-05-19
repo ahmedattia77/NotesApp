@@ -7,15 +7,27 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.example.notes.Listeners.NoteListener;
 import com.example.notes.R;
@@ -30,13 +42,17 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NoteListener {
 
     public static int ADD_REQUEST = 1;
-    public static int ADD_IMAGE_REQUEST = 5;
     public static int UPDATE_REQUEST = 2;
     public static int SHOW_REQUEST = 3;
     private ActivityMainBinding binding;
     private NoteAdapter noteAdapter;
     private List<Note> noteList;
     private int noteClickPosition = -1;
+    private  AlertDialog aboutUsalertDialog;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+    private boolean  nightMode;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +98,73 @@ public class MainActivity extends AppCompatActivity implements NoteListener {
             }
         });
 
+        binding.mainSearchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                noteAdapter.cancelTimer();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                noteAdapter.filter(s.toString());
+            }
+        });
+
+        binding.mainAbout.setOnClickListener((v) -> aboutUsNoteAlertDialog());
+
+        initialDarkLightMode();
+        binding.mainSwitch.setOnClickListener((v) -> darkLightMode());
+
+    }
+
+    private void initialDarkLightMode (){
+        preferences = getSharedPreferences("mode" , Context.MODE_PRIVATE);
+        nightMode = preferences.getBoolean("night" , false);
+
+        if (nightMode)
+            binding.mainSwitch.setChecked(true);
+    }
+
+    private void darkLightMode(){
+        Toast.makeText(this, "switched", Toast.LENGTH_SHORT).show();
+        if (nightMode){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            editor = preferences.edit();
+            editor.putBoolean("night" , false);
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            editor = preferences.edit();
+            editor.putBoolean("night" , true);
+        }
+        editor.apply();
+    }
+
+    private void aboutUsNoteAlertDialog(){
+
+        if (aboutUsalertDialog == null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            View view = LayoutInflater.from(this).inflate(
+                    R.layout.about_us
+                    ,(ViewGroup) findViewById(R.id.about)
+            );
+
+            builder.setView(view);
+            aboutUsalertDialog = builder.create();
+
+            if (aboutUsalertDialog.getWindow() != null){
+                aboutUsalertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+
+
+            aboutUsalertDialog.show();
+            aboutUsalertDialog = null;
+
+    }
     }
 
     @Override
@@ -132,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_REQUEST && resultCode == resultCode){
+        if (requestCode == ADD_REQUEST && resultCode == RESULT_OK){
             displayNotes(ADD_REQUEST , false);
         }else if (requestCode == UPDATE_REQUEST && resultCode == RESULT_OK){
             if (data != null)

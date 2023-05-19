@@ -1,15 +1,19 @@
 package com.example.notes.adapters;
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.ColorSpace;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -17,18 +21,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.notes.Listeners.NoteListener;
 import com.example.notes.R;
+import com.example.notes.activities.MainActivity;
 import com.example.notes.entities.Note;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder>{
     private List<Note> noteList;
+    private List<Note> copyNoteList;
+
+    Timer timer;
     private NoteListener noteListener;
 
     public NoteAdapter(List<Note> noteList , NoteListener noteListener) {
         this.noteList = noteList;
         this.noteListener = noteListener;
+        copyNoteList = noteList;
     }
 
     @NonNull
@@ -114,5 +126,35 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.MyViewHolder>{
                 uri.setVisibility(View.VISIBLE);
 
         }
+    }
+
+    public void filter (String searchQuery){
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (searchQuery.trim().isEmpty())
+                    noteList = copyNoteList;
+                else{
+                    List<Note> temp = new ArrayList<>();
+                    for (Note note : copyNoteList){
+                        if(note.getTitle().toLowerCase().contains(searchQuery.toLowerCase())){
+                            temp.add(note);
+                        }
+                    }
+                    noteList = temp;
+                }
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        },500);
+    }
+    public void cancelTimer(){
+        if(timer!=null)
+            timer.cancel();
     }
 }
