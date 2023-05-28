@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements NoteListener {
 
             @Override
             public void afterTextChanged(Editable s) {
+
                 noteAdapter.filter(s.toString());
             }
         });

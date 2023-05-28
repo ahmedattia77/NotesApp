@@ -85,7 +85,7 @@ public class createNoteActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra("EDIT/VIEW_REQUEST" , false)){
             binding.createLayoutAddUri.setVisibility(View.VISIBLE);
             sentNote = (Note) getIntent().getSerializableExtra("note");
-            editViewNote();
+            viewSentNote();
         }
 
         if (getIntent().getBooleanExtra("addImage" , false)){
@@ -174,10 +174,14 @@ public class createNoteActivity extends AppCompatActivity {
         });
     }
 
-    private void editViewNote() {
-        binding.createTitle.setText(sentNote.getTitle());
-        binding.createSubtitle.setText(sentNote.getSubtitle());
-        binding.createDescription.setText(sentNote.getDescription());
+    private void viewSentNote() {
+
+            binding.createTitle.setText(sentNote.getTitle());
+
+            binding.createSubtitle.setText(sentNote.getSubtitle());
+
+            binding.createDescription.setText(sentNote.getDescription());
+
         binding.createDateTime.setText(sentNote.getDateTime());
 
         if(sentNote.getImagePath() != null && !sentNote.getImagePath().trim().isEmpty()){
@@ -189,6 +193,10 @@ public class createNoteActivity extends AppCompatActivity {
         if(sentNote.getWebLink() != null && !sentNote.getWebLink().trim().isEmpty()){
             binding.createUri.setText(sentNote.getWebLink());
             binding.createUri.setVisibility(View.VISIBLE);
+        }
+
+        if (sentNote.getColor() != null && !sentNote.getColor().trim().isEmpty()){
+            binding.createView.setBackgroundColor(Color.parseColor(sentNote.getColor()));
         }
 
     }
